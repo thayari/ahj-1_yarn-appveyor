@@ -1,9 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './js/app.js',
+  entry: './src/js/app.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js',
@@ -11,29 +12,20 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+      {
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader, 'css-loader',
         ],
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        use: [{
-            loader: 'file-loader',
-            options: {
-                name: '[name].[ext]',
-                outputPath: 'img/'
-            }
-        }]
-      },
-      {
-        test: /\.(ico)$/i,
-        use: [{
-            loader: 'file-loader',
-            options: {
-                name: '[name].[ext]',
-            }
-        }]
       },
     ],
   },
@@ -43,7 +35,10 @@ module.exports = {
       filename: "./index.html"
     }),
     new MiniCssExtractPlugin({
-      filename: './css/[name].css'
+      filename: '[name].css'
     }),
+    new CopyWebpackPlugin([
+      { from: 'src/img', to: 'img' },
+    ]),
   ],
 };

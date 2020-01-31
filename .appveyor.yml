@@ -8,9 +8,9 @@ install:
   - yarn install
 build: off
 build_script:
-  - yarn build
+  - yarn run build
 test_script:
-  - yarn lint && yarn run test
+  - yarn run lint && yarn test
 deploy_script:
   - git config --global credential.helper store
   - git config --global user.name AppVeyor
